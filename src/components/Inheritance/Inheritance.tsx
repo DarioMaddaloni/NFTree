@@ -16,7 +16,12 @@ const Inheritance = ({ txsHistory, text }: Props) => {
 
   return (
     <div>
-      <NFTPapers txsHistory={txsHistory} text={text} clickablePaper={true} />
+      <NFTPapers
+        txsHistory={txsHistory}
+        text={text}
+        clickablePaper={true}
+        myColor={PURPLE}
+      />
       <Fab
         variant="extended"
         sx={{

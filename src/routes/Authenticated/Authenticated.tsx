@@ -140,6 +140,7 @@ const Authenticated = () => {
                 txsHistory={infos.transactionHistory}
                 text={"Choose from menu which action you want to perform"}
                 clickablePaper={false}
+                myColor={"black"}
               />
             ) : (
               <div>Looking for your nfts...</div>
@@ -175,6 +176,7 @@ const Authenticated = () => {
                           txsHistory={infos.transactionHistory}
                           text={"DEL TESTO"}
                           clickablePaper={false}
+                          myColor={"black"}
                         />
                       </Stack>
                     </Box>

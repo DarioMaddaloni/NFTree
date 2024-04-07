@@ -1,5 +1,12 @@
-import { PAPERDIMENSION } from "@/shared/constants";
-import { hexToASCII } from "@/shared/utils";
+import {
+  INHERIT,
+  MERGE,
+  PANNA,
+  PAPERDIMENSION,
+  SPLIT,
+  TRADE,
+} from "@/shared/constants";
+import { checkCondition, hexToASCII } from "@/shared/utils";
 import {
   Box,
   Button,
@@ -8,6 +15,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Fab,
   Paper,
   Stack,
   Typography,
@@ -22,17 +30,21 @@ interface Props {
   txsHistory: AccountTxResponse | null;
   text: string;
   clickablePaper: boolean;
+  myColor: string;
 }
 
-const NFTPapers = ({ txsHistory, text, clickablePaper }: Props) => {
+const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const nfts = txsHistory?.result.transactions?.filter(
     (transaction) => transaction?.tx?.TransactionType === "NFTokenMint"
   );
-  console.log("NFTPaper");
-  console.log(typeof nfts);
   const [selectedElement, setSelectedElement] =
     useState<AccountTxTransaction | null>(null);
+  const [selectedNFTs, setSelectedNFTs] = useState<
+    AccountTxTransaction[] | null
+  >(null);
+  console.log("selectedNFTs");
+  console.log(selectedNFTs);
 
   const handleClickPaper = ({ element }: ClickPaperProps) => {
     if (clickablePaper) {
@@ -40,6 +52,20 @@ const NFTPapers = ({ txsHistory, text, clickablePaper }: Props) => {
       console.log(element);
       setSelectedElement(element);
       setIsDialogOpen(!isDialogOpen);
+    }
+  };
+
+  const handleFab = () => {
+    if (text == TRADE) {
+      //TODO
+    } else if (text == MERGE) {
+      //TODO
+    } else if (text == INHERIT) {
+      //TODO
+    } else if (text == SPLIT) {
+      //TODO
+    } else {
+      alert("Refresh the page. Something went wrong");
     }
   };
 
@@ -86,6 +112,9 @@ const NFTPapers = ({ txsHistory, text, clickablePaper }: Props) => {
                           borderRadius: "8px",
                           overflow: "auto",
                           margin: "8px 0px 8px 0px",
+                          backgroundColor: selectedNFTs?.includes(element)
+                            ? myColor
+                            : null,
                         }}
                         onClick={() => handleClickPaper({ element })}
                       >
@@ -165,6 +194,10 @@ const NFTPapers = ({ txsHistory, text, clickablePaper }: Props) => {
               <DialogActions>
                 <Button
                   onClick={() => {
+                    setSelectedNFTs(
+                      selectedNFTs?.filter((nft) => nft !== selectedElement) ??
+                        []
+                    );
                     setIsDialogOpen(false);
                   }}
                   autoFocus
@@ -175,7 +208,20 @@ const NFTPapers = ({ txsHistory, text, clickablePaper }: Props) => {
                 </Button>
                 <Button
                   onClick={() => {
-                    console.log("SCELTO");
+                    if (
+                      checkCondition({ selectedNFTs, selectedElement, text })
+                    ) {
+                      setSelectedNFTs(
+                        selectedNFTs
+                          ? [...selectedNFTs, selectedElement]
+                          : [selectedElement]
+                      );
+                    } else {
+                      alert(
+                        "You cannot select also this NFT for this operation"
+                      );
+                    }
+                    console.log("CHOSEN");
                     setIsDialogOpen(false);
                   }}
                 >
@@ -186,6 +232,21 @@ const NFTPapers = ({ txsHistory, text, clickablePaper }: Props) => {
           )}
         </div>
       </Stack>
+      <Fab
+        variant="extended"
+        sx={{
+          position: "fixed",
+          bottom: 24,
+          right: 24,
+          backgroundColor: myColor,
+          color: PANNA,
+        }}
+        onClick={() => {
+          handleFab;
+        }}
+      >
+        {text}
+      </Fab>
     </div>
   );
 };

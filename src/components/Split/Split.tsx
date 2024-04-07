@@ -12,7 +12,12 @@ const Split = ({ txsHistory, text }: Props) => {
   console.log(txsHistory);
   return (
     <div>
-      <NFTPapers txsHistory={txsHistory} text={text} clickablePaper={true} />
+      <NFTPapers
+        txsHistory={txsHistory}
+        text={text}
+        clickablePaper={true}
+        myColor={ORANGE}
+      />
       <Fab
         variant="extended"
         sx={{
