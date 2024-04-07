@@ -48,8 +48,12 @@ interface Props {
 
 const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
   const [toPublicAddress, setToPublicAddress] = useState<string>("");
+  const [toPublicAddress1, setToPublicAddress1] = useState<string>("");
+  const [toPublicAddress2, setToPublicAddress2] = useState<string>("");
   const [URIToMerge, setURIToMerge] = useState<string>("");
   const [XRPtoSend, setXRPtoSend] = useState<number | null>(null);
+  const [XRPtoSend1] = useState<number | null>(20);
+  const [XRPtoSend2] = useState<number | null>(20);
   const handleXRPtoSendChange = (event: any, newXRPtoSend: number | null) => {
     setXRPtoSend(newXRPtoSend);
     event;
@@ -265,22 +269,28 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                   </Stack>
                   <Stack
                     display="flex"
-                    direction="column"
+                    direction="row"
                     justifyContent="center"
                     alignItems="center"
                     spacing={2}
                   >
-                    {selectedNFTs?.map((element) => (
-                      // @ts-expect-error
-                      <div>{hexToASCII(element.tx.URI)}</div>
-                    ))}
-
                     <TextField
                       id="outlined-basic"
-                      label="URI"
+                      label="Address1"
                       variant="outlined"
-                      value={URIToMerge}
-                      onChange={(event) => setURIToMerge(event.target.value)}
+                      value={toPublicAddress1}
+                      onChange={(event) =>
+                        setToPublicAddress1(event.target.value)
+                      }
+                    />
+                    <TextField
+                      id="outlined-basic"
+                      label="Address2"
+                      variant="outlined"
+                      value={toPublicAddress2}
+                      onChange={(event) =>
+                        setToPublicAddress2(event.target.value)
+                      }
                     />
                   </Stack>
                 </DialogContentText>
@@ -300,64 +310,35 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                   onClick={() => {
                     // toPublicAddress
                     // XRPtoSend
-                    // selectedNFTs[0]Memos: [
-
-                    if (selectedNFTs) {
+                    // selectedNFTs[0]
+                    if (selectedNFTs && XRPtoSend1 && XRPtoSend2) {
                       const client = MyClient();
-
-                      let sum = 0;
-                      let totalURI = "";
-                      for (let i = 0; i < selectedNFTs.length; i++) {
-                        if (
-                          selectedNFTs &&
-                          selectedNFTs[i].tx &&
-                          selectedNFTs[i].tx?.Memos &&
-                          selectedNFTs[i].tx?.Memos?.length
-                        ) {
-                          if (
-                            // @ts-expect-error
-                            selectedNFTs[i].tx?.Memos?.length > 1 &&
-                            selectedNFTs[i].tx?.Memos?.[1]
-                          ) {
-                            // @ts-expect-error
-                            sum += selectedNFTs[i].tx?.Memos[1] // @ts-expect-error
-                              .MemoData as number;
-                          }
-                        }
-                        // @ts-expect-error
-                        totalURI += selectedNFTs[i].meta.nftoken_id;
-                      }
-                      const digest = sha224(totalURI);
-                      console.log("SHA224");
-                      MyMerge(
+                      const drop1 = xrpToDrops(XRPtoSend1);
+                      const drop2 = xrpToDrops(XRPtoSend2);
+                      console.log("selectedNFTs[0].meta.nftoken_id");
+                      // @ts-expect-error
+                      console.log(selectedNFTs[0].meta.nftoken_id);
+                      MyCreateNFTOffer(
                         {
-                          URI: URIToMerge,
-                          NFTokenTaxon: 0,
-                          Memos: [
-                            {
-                              Memo: {
-                                MemoType: convertStringToHex(
-                                  "HashParents" ?? ""
-                                ),
-                                MemoData: convertStringToHex(digest ?? ""),
-                              },
-                            },
-                            {
-                              Memo: {
-                                MemoType: convertStringToHex(
-                                  "SumOfPercentages" ?? ""
-                                ),
-                                MemoData: convertStringToHex(
-                                  sum.toString() ?? ""
-                                ),
-                              },
-                            },
-                          ],
+                          // @ts-expect-error
+                          NFTokenID: selectedNFTs[0].meta.nftoken_id,
+                          Amount: drop1.toString(),
+                          Destination: toPublicAddress1,
                         },
                         { wallet: wallet },
                         { myClient: client }
                       );
-                      alert("NFT minted");
+                      MyCreateNFTOffer(
+                        {
+                          // @ts-expect-error
+                          NFTokenID: selectedNFTs[0].meta.nftoken_id,
+                          Amount: drop2.toString(),
+                          Destination: toPublicAddress2,
+                        },
+                        { wallet: wallet },
+                        { myClient: client }
+                      );
+                      alert("NFT offer created");
                     }
                     setIsFinalizationDialogOpen(false);
                   }}

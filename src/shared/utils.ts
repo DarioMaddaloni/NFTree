@@ -42,17 +42,17 @@ export const checkCondition = ({selectedNFTs, text}: CheckConditionProps)  => {
     console.log(INHERIT);
     console.log("selectedNFTs")
     console.log(selectedNFTs?.length)
-    if (!selectedNFTs || selectedNFTs?.length != 0) {
+    if (selectedNFTs) {
       return false;
     }  else {
       return true
     }
   } else if (text == MERGE) {
   } else if (text == SPLIT){
-    if (!selectedNFTs || selectedNFTs?.length != 0) {
+    if (selectedNFTs) {
       return false;
     }  else {
-      return true;
+      return true
     }
   }
   return flag;
