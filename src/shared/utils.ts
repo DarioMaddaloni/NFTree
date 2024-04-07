@@ -24,11 +24,31 @@ export const checkCondition = ({selectedElement, selectedNFTs, text}: CheckCondi
   let flag = true;
   //IN QUESTI TODO DEVO CONTROLLARE CHE IL selectedElement soddisfa le proprietà per essere aggiunto alla selectedNFTs
   if (text == TRADE) {
-    //TODO 
-  } else if (text == MERGE){
-    //TODO
+    // One nft for xrps
+    // Participants can trade only one nft a time
+    console.log("checkConditionFirst");
+    console.log(TRADE);
+    console.log("selectedNFTs")
+    console.log(selectedNFTs?.length)
+    if (selectedNFTs && selectedNFTs?.length != 0) {
+      return false;
+    }  else {
+      return true
+    }
   } else if (text == INHERIT) {
-    //TODO
+    // one nft to multiple nfts to the same contract with different percentages
+    // Participants can trade only one nft a time
+    console.log("checkConditionFirst");
+    console.log(INHERIT);
+    console.log("selectedNFTs")
+    console.log(selectedNFTs?.length)
+    if (selectedNFTs && selectedNFTs?.length != 0) {
+      return false;
+    }  else {
+      return true
+    }
+  } else if (text == MERGE) {
+    // Participants can merge only nfts that point to the same 
   } else if (text == SPLIT){
     //TODO
   }

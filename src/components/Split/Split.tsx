@@ -1,7 +1,6 @@
 import { AccountTxResponse } from "xrpl";
 import NFTPapers from "../NFTPapers";
-import { Fab } from "@mui/material";
-import { ORANGE, PANNA } from "@/shared/constants";
+import { ORANGE } from "@/shared/constants";
 
 interface Props {
   txsHistory: AccountTxResponse | null;
@@ -18,18 +17,6 @@ const Split = ({ txsHistory, text }: Props) => {
         clickablePaper={true}
         myColor={ORANGE}
       />
-      <Fab
-        variant="extended"
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          backgroundColor: ORANGE,
-          color: PANNA,
-        }}
-      >
-        Split
-      </Fab>
     </div>
   );
 };

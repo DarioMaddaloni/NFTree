@@ -1,7 +1,6 @@
 import { AccountTxResponse } from "xrpl";
 import NFTPapers from "../NFTPapers";
-import { Fab } from "@mui/material";
-import { PANNA, PURPLE } from "@/shared/constants";
+import { PURPLE } from "@/shared/constants";
 
 interface Props {
   txsHistory: AccountTxResponse | null;
@@ -22,18 +21,6 @@ const Inheritance = ({ txsHistory, text }: Props) => {
         clickablePaper={true}
         myColor={PURPLE}
       />
-      <Fab
-        variant="extended"
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          backgroundColor: PURPLE,
-          color: PANNA,
-        }}
-      >
-        Inherit
-      </Fab>
     </div>
   );
 };

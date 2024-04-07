@@ -6,7 +6,7 @@ interface Props {
   text: string;
 }
 
-const SaleTransaction = ({ txsHistory, text }: Props) => {
+const TradeTransaction = ({ txsHistory, text }: Props) => {
   console.log("txsHistory");
   console.log(txsHistory);
 
@@ -22,4 +22,4 @@ const SaleTransaction = ({ txsHistory, text }: Props) => {
   );
 };
 
-export default SaleTransaction;
+export default TradeTransaction;

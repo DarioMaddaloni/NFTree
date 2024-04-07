@@ -1,7 +1,6 @@
 import { AccountTxResponse } from "xrpl";
 import NFTPapers from "../NFTPapers";
-import { Fab } from "@mui/material";
-import { GREEN, PANNA } from "@/shared/constants";
+import { GREEN } from "@/shared/constants";
 
 interface Props {
   txsHistory: AccountTxResponse | null;
@@ -18,18 +17,6 @@ const Merge = ({ txsHistory, text }: Props) => {
         clickablePaper={true}
         myColor={GREEN}
       />
-      <Fab
-        variant="extended"
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          backgroundColor: GREEN,
-          color: PANNA,
-        }}
-      >
-        Merge
-      </Fab>
     </div>
   );
 };

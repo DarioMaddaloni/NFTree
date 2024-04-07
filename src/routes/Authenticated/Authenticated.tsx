@@ -17,7 +17,7 @@ import { useActiveActivity } from "@/shared/hooks";
 import MyInfos from "@/xrpl/MyInfos";
 import MyClient from "@/xrpl/MyClient";
 import MyAppBar from "@/components/MyAppBar";
-import SaleTransaction from "@/components/SaleTransaction";
+import TradeTransaction from "@/components/TradeTransaction";
 import Inheritance from "@/components/Inheritance";
 import Merge from "@/components/Merge";
 import Split from "@/components/Split";
@@ -47,7 +47,7 @@ const Authenticated = () => {
     transactionHistory: AccountTxResponse | null;
   }>({ balance: 0, transactionHistory: null });
 
-  const actions = ["SaleTransaction", "Inheritance", "Merge", "Split"];
+  const actions = [TRADE, INHERIT, MERGE, SPLIT];
   const handleChoice = (text: string) => {
     let flag = false;
     for (let i = 0; i < actions.length; i++) {
@@ -122,7 +122,7 @@ const Authenticated = () => {
         >
           {typeof activeActivity == "string" &&
             (activeActivity == actions[0] ? (
-              <SaleTransaction
+              <TradeTransaction
                 txsHistory={infos.transactionHistory}
                 text={TRADE}
               />

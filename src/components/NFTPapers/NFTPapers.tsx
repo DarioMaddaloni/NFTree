@@ -18,10 +18,13 @@ import {
   Fab,
   Paper,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AccountTxResponse, AccountTxTransaction } from "xrpl";
+import AuthenticationContext from "../AuthenticationContext";
+import NumberInput from "../NumberInput";
 
 interface ClickPaperProps {
   element: AccountTxTransaction;
@@ -34,10 +37,19 @@ interface Props {
 }
 
 const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
+  const [toPublicAddress, setToPublicAddress] = useState<string>("");
+  const [XRPtoSend, setXRPtoSend] = useState<number | null>(null);
+  const handleXRPtoSendChange = (event: any, newXRPtoSend: number | null) => {
+    setXRPtoSend(newXRPtoSend);
+    event;
+  };
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const nfts = txsHistory?.result.transactions?.filter(
     (transaction) => transaction?.tx?.TransactionType === "NFTokenMint"
   );
+  const [isFinalizationDialogOpen, setIsFinalizationDialogOpen] =
+    useState<boolean>(false);
+  const { activeActivity } = useContext(AuthenticationContext);
   const [selectedElement, setSelectedElement] =
     useState<AccountTxTransaction | null>(null);
   const [selectedNFTs, setSelectedNFTs] = useState<
@@ -56,16 +68,11 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
   };
 
   const handleFab = () => {
-    if (text == TRADE) {
-      //TODO
-    } else if (text == MERGE) {
-      //TODO
-    } else if (text == INHERIT) {
-      //TODO
-    } else if (text == SPLIT) {
-      //TODO
-    } else {
-      alert("Refresh the page. Something went wrong");
+    console.log("ADSPFOI");
+    if (selectedNFTs && selectedNFTs?.length != 0) {
+      console.log("handleFab");
+      console.log(selectedNFTs);
+      setIsFinalizationDialogOpen(true);
     }
   };
 
@@ -230,23 +237,198 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
               </DialogActions>
             </Dialog>
           )}
+          {/* InheritDialog */}
+          {activeActivity == INHERIT && (
+            <Dialog
+              open={isFinalizationDialogOpen}
+              onClose={() => {
+                setIsFinalizationDialogOpen(false);
+              }}
+            >
+              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Stack direction="column" spacing={2}>
+                    <b>NFT:</b>
+                  </Stack>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                  autoFocus
+                  color="error"
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          {/* TradeDialog */}
+          {activeActivity == TRADE && (
+            <Dialog
+              open={isFinalizationDialogOpen}
+              onClose={() => {
+                setIsFinalizationDialogOpen(false);
+              }}
+            >
+              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Stack direction="column" spacing={2}>
+                    <b>Trade:</b>
+                  </Stack>
+                  <Stack
+                    display="flex"
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <NumberInput
+                      value={XRPtoSend}
+                      onChange={handleXRPtoSendChange}
+                    ></NumberInput>
+                    <TextField
+                      id="outlined-basic"
+                      label="to public address"
+                      variant="outlined"
+                      value={toPublicAddress}
+                      onChange={(event) =>
+                        setToPublicAddress(event.target.value)
+                      }
+                    />
+                  </Stack>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                  autoFocus
+                  color="error"
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    //TODO send my offer
+                    // toPublicAddress
+                    // XRPtoSend
+                    // selectedNFTs[0]
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          {/* MergeDialog */}
+          {activeActivity == MERGE && (
+            <Dialog
+              open={isFinalizationDialogOpen}
+              onClose={() => {
+                setIsFinalizationDialogOpen(false);
+              }}
+            >
+              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Stack direction="column" spacing={2}>
+                    <b>NFT:</b>
+                  </Stack>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                  autoFocus
+                  color="error"
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          {/* ActiveDialog */}
+          {activeActivity == SPLIT && (
+            <Dialog
+              open={isFinalizationDialogOpen}
+              onClose={() => {
+                setIsFinalizationDialogOpen(false);
+              }}
+            >
+              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Stack direction="column" spacing={2}>
+                    <b>NFT:</b>
+                  </Stack>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                  autoFocus
+                  color="error"
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsFinalizationDialogOpen(false);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
         </div>
       </Stack>
-      <Fab
-        variant="extended"
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          backgroundColor: myColor,
-          color: PANNA,
-        }}
-        onClick={() => {
-          handleFab;
-        }}
-      >
-        {text}
-      </Fab>
+      {clickablePaper && (
+        <Fab
+          variant="extended"
+          sx={{
+            position: "fixed",
+            bottom: 24,
+            right: 24,
+            backgroundColor: myColor,
+            color: PANNA,
+          }}
+          onClick={() => {
+            handleFab();
+          }}
+        >
+          {text}
+        </Fab>
+      )}
     </div>
   );
 };

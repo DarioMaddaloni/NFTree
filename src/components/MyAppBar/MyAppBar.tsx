@@ -1,9 +1,13 @@
 import {
   BLUE,
   GREEN,
+  INHERIT,
+  MERGE,
   ORANGE,
   PURPLE,
   RED,
+  SPLIT,
+  TRADE,
   WIDTHDRAWER,
 } from "@/shared/constants";
 import { useSecret } from "@/shared/hooks";
@@ -39,13 +43,13 @@ const StyledAppBar = styled(AppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   backgroundColor:
-    myActiveActivity === "SaleTransaction"
+    myActiveActivity === TRADE
       ? RED
-      : myActiveActivity === "Merge"
+      : myActiveActivity === MERGE
       ? GREEN
-      : myActiveActivity === "Inheritance"
+      : myActiveActivity === INHERIT
       ? PURPLE
-      : myActiveActivity === "Split"
+      : myActiveActivity === SPLIT
       ? ORANGE
       : BLUE,
   ...(drawerOpen && {
