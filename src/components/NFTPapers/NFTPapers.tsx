@@ -26,12 +26,15 @@ import {
   AccountTxResponse,
   AccountTxTransaction,
   Wallet,
+  convertStringToHex,
   xrpToDrops,
 } from "xrpl";
 import AuthenticationContext from "../AuthenticationContext";
 import NumberInput from "../NumberInput";
 import MyCreateNFTOffer from "@/xrpl/MyCreateNFTOffer";
 import MyClient from "@/xrpl/MyClient";
+import MyMerge from "@/xrpl/MyMerge";
+import { sha224 } from "js-sha256";
 
 interface ClickPaperProps {
   element: AccountTxTransaction;
@@ -45,6 +48,7 @@ interface Props {
 
 const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
   const [toPublicAddress, setToPublicAddress] = useState<string>("");
+  const [URIToMerge, setURIToMerge] = useState<string>("");
   const [XRPtoSend, setXRPtoSend] = useState<number | null>(null);
   const handleXRPtoSendChange = (event: any, newXRPtoSend: number | null) => {
     setXRPtoSend(newXRPtoSend);
@@ -253,11 +257,31 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                 setIsFinalizationDialogOpen(false);
               }}
             >
-              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogTitle>{"Inherit"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   <Stack direction="column" spacing={2}>
-                    <b>NFT:</b>
+                    <b>Inherit:</b>
+                  </Stack>
+                  <Stack
+                    display="flex"
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    {selectedNFTs?.map((element) => (
+                      // @ts-expect-error
+                      <div>{hexToASCII(element.tx.URI)}</div>
+                    ))}
+
+                    <TextField
+                      id="outlined-basic"
+                      label="URI"
+                      variant="outlined"
+                      value={URIToMerge}
+                      onChange={(event) => setURIToMerge(event.target.value)}
+                    />
                   </Stack>
                 </DialogContentText>
               </DialogContent>
@@ -274,6 +298,67 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                 </Button>
                 <Button
                   onClick={() => {
+                    // toPublicAddress
+                    // XRPtoSend
+                    // selectedNFTs[0]Memos: [
+
+                    if (selectedNFTs) {
+                      const client = MyClient();
+
+                      let sum = 0;
+                      let totalURI = "";
+                      for (let i = 0; i < selectedNFTs.length; i++) {
+                        if (
+                          selectedNFTs &&
+                          selectedNFTs[i].tx &&
+                          selectedNFTs[i].tx?.Memos &&
+                          selectedNFTs[i].tx?.Memos?.length
+                        ) {
+                          if (
+                            // @ts-expect-error
+                            selectedNFTs[i].tx?.Memos?.length > 1 &&
+                            selectedNFTs[i].tx?.Memos?.[1]
+                          ) {
+                            // @ts-expect-error
+                            sum += selectedNFTs[i].tx?.Memos[1] // @ts-expect-error
+                              .MemoData as number;
+                          }
+                        }
+                        // @ts-expect-error
+                        totalURI += selectedNFTs[i].meta.nftoken_id;
+                      }
+                      const digest = sha224(totalURI);
+                      console.log("SHA224");
+                      MyMerge(
+                        {
+                          URI: URIToMerge,
+                          NFTokenTaxon: 0,
+                          Memos: [
+                            {
+                              Memo: {
+                                MemoType: convertStringToHex(
+                                  "HashParents" ?? ""
+                                ),
+                                MemoData: convertStringToHex(digest ?? ""),
+                              },
+                            },
+                            {
+                              Memo: {
+                                MemoType: convertStringToHex(
+                                  "SumOfPercentages" ?? ""
+                                ),
+                                MemoData: convertStringToHex(
+                                  sum.toString() ?? ""
+                                ),
+                              },
+                            },
+                          ],
+                        },
+                        { wallet: wallet },
+                        { myClient: client }
+                      );
+                      alert("NFT minted");
+                    }
                     setIsFinalizationDialogOpen(false);
                   }}
                 >
@@ -290,7 +375,7 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                 setIsFinalizationDialogOpen(false);
               }}
             >
-              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogTitle>{"Trade"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   <Stack direction="column" spacing={2}>
@@ -332,13 +417,15 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                 </Button>
                 <Button
                   onClick={() => {
-                    //TODO send my offer
                     // toPublicAddress
                     // XRPtoSend
                     // selectedNFTs[0]
                     if (selectedNFTs && XRPtoSend) {
                       const client = MyClient();
                       const drop = xrpToDrops(XRPtoSend);
+                      console.log("selectedNFTs[0].meta.nftoken_id");
+                      // @ts-expect-error
+                      console.log(selectedNFTs[0].meta.nftoken_id);
                       MyCreateNFTOffer(
                         {
                           // @ts-expect-error
@@ -367,11 +454,31 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                 setIsFinalizationDialogOpen(false);
               }}
             >
-              <DialogTitle>{"Property"}</DialogTitle>
+              <DialogTitle>{"Merge"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   <Stack direction="column" spacing={2}>
-                    <b>NFT:</b>
+                    <b>Merge:</b>
+                  </Stack>
+                  <Stack
+                    display="flex"
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    {selectedNFTs?.map((element) => (
+                      // @ts-expect-error
+                      <div>{hexToASCII(element.tx.URI)}</div>
+                    ))}
+
+                    <TextField
+                      id="outlined-basic"
+                      label="URI"
+                      variant="outlined"
+                      value={URIToMerge}
+                      onChange={(event) => setURIToMerge(event.target.value)}
+                    />
                   </Stack>
                 </DialogContentText>
               </DialogContent>
@@ -388,6 +495,67 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                 </Button>
                 <Button
                   onClick={() => {
+                    // toPublicAddress
+                    // XRPtoSend
+                    // selectedNFTs[0]Memos: [
+
+                    if (selectedNFTs) {
+                      const client = MyClient();
+
+                      let sum = 0;
+                      let totalURI = "";
+                      for (let i = 0; i < selectedNFTs.length; i++) {
+                        if (
+                          selectedNFTs &&
+                          selectedNFTs[i].tx &&
+                          selectedNFTs[i].tx?.Memos &&
+                          selectedNFTs[i].tx?.Memos?.length
+                        ) {
+                          if (
+                            // @ts-expect-error
+                            selectedNFTs[i].tx?.Memos?.length > 1 &&
+                            selectedNFTs[i].tx?.Memos?.[1]
+                          ) {
+                            // @ts-expect-error
+                            sum += selectedNFTs[i].tx?.Memos[1] // @ts-expect-error
+                              .MemoData as number;
+                          }
+                        }
+                        // @ts-expect-error
+                        totalURI += selectedNFTs[i].meta.nftoken_id;
+                      }
+                      const digest = sha224(totalURI);
+                      console.log("SHA224");
+                      MyMerge(
+                        {
+                          URI: URIToMerge,
+                          NFTokenTaxon: 0,
+                          Memos: [
+                            {
+                              Memo: {
+                                MemoType: convertStringToHex(
+                                  "HashParents" ?? ""
+                                ),
+                                MemoData: convertStringToHex(digest ?? ""),
+                              },
+                            },
+                            {
+                              Memo: {
+                                MemoType: convertStringToHex(
+                                  "SumOfPercentages" ?? ""
+                                ),
+                                MemoData: convertStringToHex(
+                                  sum.toString() ?? ""
+                                ),
+                              },
+                            },
+                          ],
+                        },
+                        { wallet: wallet },
+                        { myClient: client }
+                      );
+                      alert("NFT minted");
+                    }
                     setIsFinalizationDialogOpen(false);
                   }}
                 >

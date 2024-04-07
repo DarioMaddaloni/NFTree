@@ -15,16 +15,17 @@ const MyInfos = async (myAddress: string, myClient: Client) => {
   console.log("txs History");
   console.log(transactionHistory);
   //nfts
-  // const nftsHistory = await myClient.request({
-  //   command: "account_nfts",
-  //   account: myAddress,
-  // });
-  // console.log("nfts History");
-  // console.log(nftsHistory);
+  const nftsHistory = await myClient.request({
+    command: "account_nfts",
+    account: myAddress,
+  });
+  console.log("nfts History");
+  console.log(nftsHistory);
 
   return {
     balance: balance,
     transactionHistory: transactionHistory,
+    nftsHistory: nftsHistory,
   };
 };
 

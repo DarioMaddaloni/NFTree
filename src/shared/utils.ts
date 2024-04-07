@@ -20,7 +20,7 @@ interface CheckConditionProps {
   text: string
 }
 
-export const checkCondition = ({selectedElement, selectedNFTs, text}: CheckConditionProps)  => {
+export const checkCondition = ({selectedNFTs, text}: CheckConditionProps)  => {
   let flag = true;
   //IN QUESTI TODO DEVO CONTROLLARE CHE IL selectedElement soddisfa le proprietà per essere aggiunto alla selectedNFTs
   if (text == TRADE) {
@@ -42,15 +42,18 @@ export const checkCondition = ({selectedElement, selectedNFTs, text}: CheckCondi
     console.log(INHERIT);
     console.log("selectedNFTs")
     console.log(selectedNFTs?.length)
-    if (selectedNFTs && selectedNFTs?.length != 0) {
+    if (!selectedNFTs || selectedNFTs?.length != 0) {
       return false;
     }  else {
       return true
     }
   } else if (text == MERGE) {
-    // Participants can merge only nfts that point to the same 
   } else if (text == SPLIT){
-    //TODO
+    if (!selectedNFTs || selectedNFTs?.length != 0) {
+      return false;
+    }  else {
+      return true;
+    }
   }
   return flag;
 }
