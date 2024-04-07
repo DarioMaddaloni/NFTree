@@ -75,7 +75,8 @@ An easy solution is to have an observer -- not necessarily a node -- scan the ch
 This is a protocol executable on the XRP Ledger. No middleman is needed. A platform can be used to ensure all operations result in something that is valid according to the above section "POLICING THE BLOCKCHAIN".
 
 ## FUTURE WORK
-
+- Extend range of actions
+- GUI for witnesses
 
 ## DETAILS FOR THE PARIS HACKATHON
 
