@@ -36,9 +36,9 @@ In a shared property (e.g. A has 30% ownership, B has 70%), one part sells their
 ### Merge
 | *Classical operation*  | *NFT operation*  | *input parties*  | *output parties*  |
 | ------------- | ------------- |------------- |------------- |
-| marging properties | minting  | one | one |
+| merging properties | minting  | one | one |
 
-One user has two NFTs and merges them into a new one. This is the action of merging different real estate properties.
+One user has two NFTs and merges them into a new one. This is the action of merging different shares or different real estate properties.
 <p align = "center"> 
 <img alt="logo" src="https://github.com/DarioMaddaloni/NFTree/assets/64229723/35b9bd56-030a-45f8-bebd-b4d980952d99">
 
@@ -48,7 +48,7 @@ One user has two NFTs and merges them into a new one. This is the action of merg
 | ------------- | ------------- |------------- |------------- |
 | writing will  | minting, selling | one | many |
 
-Owner sends an inheritance to two heirs via an NFT offer. If refused, it bounces back to the account (which is at this point controlled by the will executioner). This is the action of writing a will -- where the heirs can reject the property.
+Owner sends an inheritance to two heirs via an NFT offer. If refused, it bounces back to the account (which is at this point controlled by either by the owner or by the will executioner). This is the action of writing a will -- where the heirs can reject the property.
 <p align = "center"> 
 <img alt="logo" src="https://github.com/DarioMaddaloni/NFTree/assets/64229723/822a8279-8cc0-4396-9b4b-f2010ca5b986">
 
@@ -72,17 +72,18 @@ _Example: in France gifting your share of a shared property is allowed and canno
 An easy solution is to have an observer -- not necessarily a node -- scan the chain for illegal actions.
 
 ## THE PLATFORM
-This is a protocol executable on the XRP Ledger. No middleman is needed. A platform can be used to ensured all operations result in something that is valid according to the above section "POLICING THE BLOCKCHAIN".
+This is a protocol executable on the XRP Ledger. No middleman is needed. A platform can be used to ensure all operations result in something that is valid according to the above section "POLICING THE BLOCKCHAIN".
 
 ## FUTURE WORK
-
+- Extend range of actions
+- GUI for witnesses
 
 ## DETAILS FOR THE PARIS HACKATHON
 
 ### Work completed prior to the hackathon
-- authomatic build of Refine App
+- automatic build of Refine App
 
 ### Non-team-created software or intellectual property (libraries, assets,...)
 - Logo: Google images modified on GIMP
 - Typescript: XRPL
-- NodeJS: React, Web3, XUMM, MUI
+- NodeJS: React, Vite, MUI
