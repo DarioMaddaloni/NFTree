@@ -7,14 +7,28 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Stack,
+  Typography,
 } from "@mui/material";
 import AuthenticationContext from "@/components/AuthenticationContext";
 
-import { AccountNFTsResponse, AccountTxResponse, Wallet } from "xrpl";
+import { AccountTxResponse, Wallet } from "xrpl";
 import { useActiveActivity } from "@/shared/hooks";
 import MyInfos from "@/xrpl/MyInfos";
 import MyClient from "@/xrpl/MyClient";
 import MyAppBar from "@/components/MyAppBar";
+import SaleTransaction from "@/components/SaleTransaction";
+import Inheritance from "@/components/Inheritance";
+import Merge from "@/components/Merge";
+import Split from "@/components/Split";
+import {
+  INHERIT,
+  MERGE,
+  PAPERDIMENSION,
+  SPLIT,
+  TRADE,
+} from "@/shared/constants";
+import NFTPapers from "@/components/NFTPapers";
 
 const Authenticated = () => {
   // const isConnected = useIsConnected();
@@ -27,6 +41,11 @@ const Authenticated = () => {
   const handleOpenDrawer = () => {
     setIsOpenDrawer((isOpenDrawer) => !isOpenDrawer);
   };
+
+  const [infos, setInfos] = useState<{
+    balance: number;
+    transactionHistory: AccountTxResponse | null;
+  }>({ balance: 0, transactionHistory: null });
 
   const actions = ["SaleTransaction", "Inheritance", "Merge", "Split"];
   const handleChoice = (text: string) => {
@@ -42,12 +61,6 @@ const Authenticated = () => {
       setActiveActivity("");
     }
   };
-
-  const [infos, setInfos] = useState<{
-    balance: number;
-    transactionHistory: AccountTxResponse | null;
-    nftHistory: AccountNFTsResponse | null;
-  }>({ balance: 0, transactionHistory: null, nftHistory: null });
 
   useEffect(() => {
     const updateInfos = async () => {
@@ -68,7 +81,6 @@ const Authenticated = () => {
       setInfos({
         balance: myInfos.balance,
         transactionHistory: myInfos.transactionHistory,
-        nftHistory: myInfos.nftsHistory,
       });
       await client.disconnect();
     };
@@ -110,20 +122,71 @@ const Authenticated = () => {
         >
           {typeof activeActivity == "string" &&
             (activeActivity == actions[0] ? (
-              <div>{actions[0]}</div>
+              <SaleTransaction
+                txsHistory={infos.transactionHistory}
+                text={TRADE}
+              />
             ) : activeActivity == actions[1] ? (
-              <div>{actions[1]}</div>
+              <Inheritance
+                txsHistory={infos.transactionHistory}
+                text={INHERIT}
+              />
             ) : activeActivity == actions[2] ? (
-              <div>{actions[2]}</div>
+              <Merge txsHistory={infos.transactionHistory} text={MERGE} />
             ) : activeActivity == actions[3] ? (
-              <div>{actions[3]}</div>
+              <Split txsHistory={infos.transactionHistory} text={SPLIT} />
+            ) : infos.transactionHistory ? (
+              <NFTPapers
+                txsHistory={infos.transactionHistory}
+                text={"Choose from menu which action you want to perform"}
+                clickablePaper={false}
+              />
             ) : (
-              <p>Choose from menu which action you want to perform</p>
+              <div>Looking for your nfts...</div>
             ))}
           {typeof activeActivity != "string" && (
-            <p>Choose from menu which action you want to perform</p>
+            <Stack
+              display="flex"
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <Typography component={"span"} variant={"body2"}>
+                Choose from menu which action you want to perform
+              </Typography>
+              <div>
+                {infos.transactionHistory ? (
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Box
+                      sx={{
+                        p: 2,
+                        maxWidth: 6 * PAPERDIMENSION,
+                        overflowX: "auto",
+                      }}
+                    >
+                      <Stack direction="row" spacing={2}>
+                        <NFTPapers
+                          txsHistory={infos.transactionHistory}
+                          text={"DEL TESTO"}
+                          clickablePaper={false}
+                        />
+                      </Stack>
+                    </Box>
+                  </Stack>
+                ) : (
+                  <div>Looking for your nfts...</div>
+                )}
+              </div>
+            </Stack>
           )}
         </div>
+
         <Drawer open={isOpenDrawer} onClose={handleOpenDrawer}>
           {DrawerList}
         </Drawer>

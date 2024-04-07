@@ -1,4 +1,11 @@
-import { WIDTHDRAWER } from "@/shared/constants";
+import {
+  BLUE,
+  GREEN,
+  ORANGE,
+  PURPLE,
+  RED,
+  WIDTHDRAWER,
+} from "@/shared/constants";
 import { useSecret } from "@/shared/hooks";
 import {
   AppBar,
@@ -8,10 +15,13 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthenticationContext from "../AuthenticationContext";
 
 interface StyledAppBarProps extends AppBarProps {
   drawerOpen: boolean;
+  myActiveActivity: string;
 }
 
 interface Props {
@@ -23,11 +33,21 @@ interface Props {
 
 const StyledAppBar = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "drawerOpen",
-})<StyledAppBarProps>(({ theme, drawerOpen }) => ({
+})<StyledAppBarProps>(({ theme, drawerOpen, myActiveActivity }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  backgroundColor:
+    myActiveActivity === "SaleTransaction"
+      ? RED
+      : myActiveActivity === "Merge"
+      ? GREEN
+      : myActiveActivity === "Inheritance"
+      ? PURPLE
+      : myActiveActivity === "Split"
+      ? ORANGE
+      : BLUE,
   ...(drawerOpen && {
     width: `calc(100% - ${WIDTHDRAWER}px)`,
     marginLeft: `${WIDTHDRAWER}px`,
@@ -46,6 +66,7 @@ const MyAppBar = ({
 }: Props) => {
   const { setSecret } = useSecret();
   const navigate = useNavigate();
+  const { activeActivity } = useContext(AuthenticationContext);
 
   const logOut = () => {
     setSecret("");
@@ -53,7 +74,11 @@ const MyAppBar = ({
   };
 
   return (
-    <StyledAppBar position="sticky" drawerOpen={drawerOpen}>
+    <StyledAppBar
+      position="sticky"
+      drawerOpen={drawerOpen}
+      myActiveActivity={activeActivity}
+    >
       <Stack
         direction="row"
         justifyContent="space-between"
