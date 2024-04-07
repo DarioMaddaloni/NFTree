@@ -22,9 +22,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useState } from "react";
-import { AccountTxResponse, AccountTxTransaction } from "xrpl";
+import {
+  AccountTxResponse,
+  AccountTxTransaction,
+  Wallet,
+  xrpToDrops,
+} from "xrpl";
 import AuthenticationContext from "../AuthenticationContext";
 import NumberInput from "../NumberInput";
+import MyCreateNFTOffer from "@/xrpl/MyCreateNFTOffer";
+import MyClient from "@/xrpl/MyClient";
 
 interface ClickPaperProps {
   element: AccountTxTransaction;
@@ -57,6 +64,8 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
   >(null);
   console.log("selectedNFTs");
   console.log(selectedNFTs);
+  const { secret } = useContext(AuthenticationContext);
+  const wallet = Wallet.fromSeed(secret);
 
   const handleClickPaper = ({ element }: ClickPaperProps) => {
     if (clickablePaper) {
@@ -68,7 +77,6 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
   };
 
   const handleFab = () => {
-    console.log("ADSPFOI");
     if (selectedNFTs && selectedNFTs?.length != 0) {
       console.log("handleFab");
       console.log(selectedNFTs);
@@ -328,6 +336,21 @@ const NFTPapers = ({ txsHistory, text, clickablePaper, myColor }: Props) => {
                     // toPublicAddress
                     // XRPtoSend
                     // selectedNFTs[0]
+                    if (selectedNFTs && XRPtoSend) {
+                      const client = MyClient();
+                      const drop = xrpToDrops(XRPtoSend);
+                      MyCreateNFTOffer(
+                        {
+                          // @ts-expect-error
+                          NFTokenID: selectedNFTs[0].meta.nftoken_id,
+                          Amount: drop.toString(),
+                          Destination: toPublicAddress,
+                        },
+                        { wallet: wallet },
+                        { myClient: client }
+                      );
+                      alert("NFT offer created");
+                    }
                     setIsFinalizationDialogOpen(false);
                   }}
                 >

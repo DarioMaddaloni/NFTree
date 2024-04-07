@@ -1,20 +1,24 @@
-import { Client, NFTokenCreateOffer, Payment, Wallet } from "xrpl";
+import { Client, NFTokenCreateOffer, Wallet } from "xrpl";
 
 type TxnOptions = { wallet: Wallet; showLogs?: boolean; multiSign?: boolean };
 type ClientProps = { myClient: Client };
-type PaymentsProps = Omit<Payment, "TransactionType" | "Account">;
+type CreateNFTOfferProps = Omit<
+  NFTokenCreateOffer,
+  "TransactionType" | "Account"
+>;
 
 const MyCreateNFTOffer = async (
-  props: PaymentsProps,
+  { Amount, NFTokenID, Destination, ...rest }: CreateNFTOfferProps,
   { wallet }: TxnOptions,
   { myClient }: ClientProps
 ) => {
   //Prepate the transaction JSON
   const nftTokenOffer: NFTokenCreateOffer = {
-    ...props,
+    ...rest,
     TransactionType: "NFTokenCreateOffer",
-    NFTokenID: 
-    Amount:
+    NFTokenID: NFTokenID,
+    Amount: Amount,
+    Destination: Destination,
     Account: wallet.address,
   };
   await myClient.connect();
